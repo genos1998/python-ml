@@ -1,0 +1,79 @@
+cell1:
+
+dataset=[['Bread','Milk','Beer'],['Bread','Diapers','Eggs'],['Milk','Diapers','Beer','Cola'],\
+         ['Bread','Milk','Diapers','Beer'],['Bread','Milk','Cola']]
+print(dataset)
+
+cell2:
+
+list8=[]
+for x in range(len(dataset)):
+    for i in range(len(dataset[x])):
+        if dataset[x][i] not in list8:
+               list8.append(dataset[x][i])
+print(list8)
+
+cell3:
+
+import pandas as pd
+from mlxtend.preprocessing import TransactionEncoder
+
+te=TransactionEncoder()
+te= te.fit(dataset) ## Read all unique items from dataset
+te_ary=te.transform(dataset) ## converts into matrix having values true or false
+print(te.columns_)
+print(te_ary)
+
+cell4:
+
+df=pd.DataFrame(te_ary,columns=te.columns_)
+df
+
+cell5:
+
+from mlxtend.frequent_patterns import apriori
+frequent_items=apriori(df,min_support=0.6,use_colnames=True)
+frequent_items
+
+cell6:
+
+from mlxtend.frequent_patterns import association_rules
+association_rules(frequent_items,metric='support',min_threshold=0.6)
+
+cell7:
+
+rules=association_rules(frequent_items,metric='support',min_threshold=0.6)
+
+cell8:
+
+print('Welcome Setji.Maari dukanama tamhara swagat che')
+print("Mahara Passe ae ae vastu che ",list8)
+cartitem=''
+list2=[]
+ip='yes'
+cartitem1=[]
+while (len(cartitem1)!=len(list8)) and (ip=='yes'):
+    user=input("Ave tu bol bakka tamne ke chiye: ")
+    if user not in cartitem:
+        cartitem+=space+user
+        list2.append(user)
+        cartitem1.append(user)
+        pred=rules[rules['antecedents'].apply(lambda x:set(list2).issubset(set(x)))]
+        if len(pred['consequents'])!=0:
+                list1=pred['consequents']
+                list1=list1.unique()
+                for x in range(len(list1)):
+                    if len(list1[x])==1:
+                        st=str(list1[x])
+                        if st[12:-3] not in cartitem:
+                            print("Ae setji aah vastu par scheme che deu ka have ouh ")
+                            print(st[12:-3])
+        print("Havve tari total kharidari che :",cartitem)
+        list2.remove(user)
+    else:
+        print('Ae dusra lene Bakka')
+    if len(cartitem1)!=len(list8):
+        ip=input("Aur bolo: ")
+if len(cartitem1)==len(list8):
+    print('Ae setji tamne toh maari puri dukan kahli karidi ae')
+    print('Haave paisa apo 2 lakh crore')
